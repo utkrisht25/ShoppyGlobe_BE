@@ -9,12 +9,19 @@ export const register = async (req, res) => {
         if (data) {
             return res.status(400).json({ message: "user already exists" });
         } else {
-            await User.create({
+           const newUser =  await User.create({
                 username,
                 email,
                 password: bcrypt.hashSync(password, 10)
             })
-            return res.status(201).json({ "Message": "user created successfully" })
+            return res.status(201).json({ 
+                message: "user created successfully",
+                user:{
+                    id: newUser._id,
+                    username: newUser.username,
+                    email: newUser.email,
+                }
+            })
         }
 
     } catch (err) {
@@ -35,12 +42,11 @@ export const login = async (req, res) => {
             return res.status(403).json({ message: "wrong credentials" })
         }
         return res.status(200).json({
-            user:{
+                _id: data._id,
                 username: data.username,
                 email: data.email,
-            },
             accessToken: generateToken(data._id),
-            "Message": "Logged in successfully"
+            message: "Logged in successfully"
         })
     } catch (err) {
        return  res.status(500).json({ message: "Server Error", error: err.message });
