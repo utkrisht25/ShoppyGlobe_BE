@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-const key = process.env.key;
+const key = process.env.KEY;
 
 // middleware to verify it
-export function verifyToken(req,res,next){
+export default function  verifyToken (req,res,next) {
     if(
         req.headers &&
         req.headers.authorization &&

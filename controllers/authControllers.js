@@ -18,7 +18,7 @@ export const register = async (req, res) => {
         }
 
     } catch (err) {
-        res.status(500).json({ message: "server error", error: err.message });
+        return res.status(500).json({ message: "server error", error: err.message });
     }
 }
 
@@ -28,22 +28,21 @@ export const login = async (req, res) => {
     try {
         let data = await User.findOne({ email })
         if (!data) {
-            res.status(404).json({ "Message": "user dosen't exists" });
+           return  res.status(404).json({ "Message": "user dosen't exists" });
         }
         let validPassword = bcrypt.compareSync(password, data.password);
         if (!validPassword) {
-            res.status(403).json({ message: "wrong credentials" })
+            return res.status(403).json({ message: "wrong credentials" })
         }
         return res.status(200).json({
             user:{
                 username: data.username,
                 email: data.email,
-                password: data.password
             },
             accessToken: generateToken(data._id),
             "Message": "Logged in successfully"
         })
     } catch (err) {
-        res.json(500).json({ message: "Server Error", error: err.message });
+       return  res.status(500).json({ message: "Server Error", error: err.message });
     }
 };
